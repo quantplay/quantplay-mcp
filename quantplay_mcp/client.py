@@ -23,7 +23,7 @@ from quantplay_mcp.config import (
     ERROR_API_REQUEST_FAILED,
     ERROR_NETWORK_ERROR,
     ERROR_TIMEOUT,
-    ERROR_PARSE_ERROR,
+    ERROR_PARSE_ERROR, PLACE_ORDER_ENDPOINT,
 )
 from quantplay_mcp.models import Account, APIResponse
 
@@ -223,6 +223,47 @@ class QuantPlayClient:
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse response: {e}")
             raise ParseError(ERROR_PARSE_ERROR.format(error=str(e))) from e
+
+    def place_order(self, order):
+        """
+        Place order
+
+        Returns:
+            the order id
+
+        Raises:
+            APIRequestError: If the API returns an error
+            NetworkError: If a network error occurs
+            TimeoutError: If the request times out
+            ParseError: If response parsing fails
+        """
+        url = self._build_url(PLACE_ORDER_ENDPOINT.format(order["nickname"]))
+
+        try:
+
+            response = requests.post(
+                url,
+                headers=self.headers,
+                json=order,
+                timeout=self.timeout,
+            )
+
+            response = self._handle_response(response)
+            return response
+
+        except requests.exceptions.Timeout as e:
+            logger.error(f"Request timed out: {e}")
+            raise TimeoutError(ERROR_TIMEOUT.format(timeout=self.timeout)) from e
+
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"Network error: {e}")
+            raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
+
+        except (requests.exceptions.RequestException, QuantPlayAPIError) as e:
+            if not isinstance(e, QuantPlayAPIError):
+                logger.error(f"Request failed: {e}")
+                raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
+            raise
 
     def get_accounts(self) -> List[Account]:
         """

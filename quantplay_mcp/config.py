@@ -20,6 +20,7 @@ DEFAULT_HEADERS: Dict[str, str] = {
 ACCOUNTS_ENDPOINT: str = "/accounts"
 POSITIONS_ENDPOINT: str = "/accounts/{}/positions"
 HOLDINGS_ENDPOINT: str = "/accounts/{}/holdings"
+PLACE_ORDER_ENDPOINT: str = "/execution/order/place?nickname={}"
 
 # Error messages
 ERROR_INVALID_API_KEY: str = "Invalid API key provided"
