@@ -305,6 +305,22 @@ class QuantPlayClient:
                 raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
             raise
 
+    def get_holdings(self, nickname) -> List[dict]:
+        """
+        Get all accounts from the API.
+
+        Returns:
+            List of Account objects
+
+        Raises:
+            APIRequestError: If the API returns an error
+            NetworkError: If a network error occurs
+            TimeoutError: If the request times out
+            ParseError: If response parsing fails
+        """
+
+
+        # Invoke holding (HOLDINGS_ENDPOINT) endpoint here
 
     def get_positions(self, nickname) -> List[dict]:
         """
