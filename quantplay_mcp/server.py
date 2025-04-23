@@ -44,7 +44,19 @@ def get_positions(nickname: str) -> list[dict]:
 
     return quantplay_client.get_positions(nickname)
 
+@mcp.tool()
+def get_holdings(nickname: str) -> list[dict]:
+    """
+    Get holdings for a give nickname
 
+    Args:
+        nickname: The nickname of the account
+
+    Returns:
+        A list of holdings dictionaries
+    """
+
+    return quantplay_client.get_holdings(nickname)
 
 @mcp.tool()
 def place_order(
