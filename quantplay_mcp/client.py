@@ -305,46 +305,6 @@ class QuantPlayClient:
                 raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
             raise
 
-    def get_holdings(self, nickname) -> List[dict]:
-        """
-        Get all accounts from the API.
-
-        Returns:
-            List of Account objects
-
-        Raises:
-            APIRequestError: If the API returns an error
-            NetworkError: If a network error occurs
-            TimeoutError: If the request times out
-            ParseError: If response parsing fails
-        """
-        url = self._build_url(HOLDINGS_ENDPOINT.format(nickname))
-        print(url)
-
-        try:
-
-            response = requests.get(
-                url,
-                headers=self.headers,
-                timeout=self.timeout,
-            )
-
-            positions_response = self._handle_response(response)
-            return positions_response
-
-        except requests.exceptions.Timeout as e:
-            logger.error(f"Request timed out: {e}")
-            raise TimeoutError(ERROR_TIMEOUT.format(timeout=self.timeout)) from e
-
-        except requests.exceptions.ConnectionError as e:
-            logger.error(f"Network error: {e}")
-            raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
-
-        except (requests.exceptions.RequestException, QuantPlayAPIError) as e:
-            if not isinstance(e, QuantPlayAPIError):
-                logger.error(f"Request failed: {e}")
-                raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
-            raise
 
     def get_positions(self, nickname) -> List[dict]:
         """
