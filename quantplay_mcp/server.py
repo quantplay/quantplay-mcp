@@ -1,5 +1,6 @@
 
 from typing import Literal
+
 from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 import os
@@ -16,6 +17,7 @@ if not api_key:
 
 quantplay_client = QuantPlayClient(api_key=api_key)
 mcp = FastMCP("Quantplay")
+
 
 # Add a tool to get positions by nickname
 @mcp.tool()
@@ -51,6 +53,7 @@ def place_order(
         "quantity": quantity,
         "tag": tag
     }
+
     try:
         response = quantplay_client.place_order(order)
     except requests.RequestException as e:
@@ -68,6 +71,9 @@ def get_positions(nickname: str) -> list[dict]:
     Returns:
         A list of position dictionaries
     """
+    # Implementation needed here
+    # For example:
+
     return quantplay_client.get_positions(nickname)
 
 # Add a tool to get holdings by nickname
@@ -81,7 +87,11 @@ def get_holdings(nickname: str) -> list[dict]:
     Returns:
         A list of holdings dictionaries
     """
+    # Implementation needed here
+    # For example:
+
     return quantplay_client.get_holdings(nickname)
+
 
 def main():
     print("Starting MCP server")
