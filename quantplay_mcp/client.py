@@ -227,7 +227,6 @@ class QuantPlayClient:
     def place_order(self, order):
         """
         Place order
-
         Returns:
             the order id
 
@@ -239,33 +238,11 @@ class QuantPlayClient:
         """
         url = self._build_url(PLACE_ORDER_ENDPOINT.format(order["nickname"]))
 
-        try:
+        # make post call headers = self.headers, json input order
 
-            response = requests.post(
-                url,
-                headers=self.headers,
-                json=order,
-                timeout=self.timeout,
-            )
+        return
 
-            response = self._handle_response(response)
-            return response
-
-        except requests.exceptions.Timeout as e:
-            logger.error(f"Request timed out: {e}")
-            raise TimeoutError(ERROR_TIMEOUT.format(timeout=self.timeout)) from e
-
-        except requests.exceptions.ConnectionError as e:
-            logger.error(f"Network error: {e}")
-            raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
-
-        except (requests.exceptions.RequestException, QuantPlayAPIError) as e:
-            if not isinstance(e, QuantPlayAPIError):
-                logger.error(f"Request failed: {e}")
-                raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
-            raise
-
-    def get_accounts(self) -> List[Account]:
+def get_accounts(self) -> List[Account]:
         """
         Get all accounts from the API.
         
