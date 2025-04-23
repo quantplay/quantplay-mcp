@@ -1,5 +1,5 @@
-from typing import Literal
 
+from typing import Literal
 from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 import os
@@ -16,7 +16,6 @@ if not api_key:
 
 quantplay_client = QuantPlayClient(api_key=api_key)
 mcp = FastMCP("Quantplay")
-
 
 # Add a tool to get positions by nickname
 @mcp.tool()
@@ -38,8 +37,9 @@ def place_order(
         price: float = 0,
         order_type: str = "MARKET",
         exchange: str = "NSE",
-        tag: str= "MCP"
+        tag: str = "MCP"
 ) -> dict:
+    """Place an order for the given nickname, then return the order confirmation dictionary."""
     order = {
         "nickname": nickname,
         "tradingsymbol": tradingsymbol,
@@ -51,8 +51,11 @@ def place_order(
         "quantity": quantity,
         "tag": tag
     }
-
-    quantplay_client.place_order(order)
+    try:
+        response = quantplay_client.place_order(order)
+    except requests.RequestException as e:
+        raise RuntimeError(f"Failed to place order: {e}") from e
+    return response
 
 # Add a tool to get positions by nickname
 @mcp.tool()
@@ -65,9 +68,6 @@ def get_positions(nickname: str) -> list[dict]:
     Returns:
         A list of position dictionaries
     """
-    # Implementation needed here
-    # For example:
-
     return quantplay_client.get_positions(nickname)
 
 # Add a tool to get holdings by nickname
@@ -81,11 +81,7 @@ def get_holdings(nickname: str) -> list[dict]:
     Returns:
         A list of holdings dictionaries
     """
-    # Implementation needed here
-    # For example:
-
     return quantplay_client.get_holdings(nickname)
-
 
 def main():
     print("Starting MCP server")
