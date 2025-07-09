@@ -60,6 +60,19 @@ def get_holdings(nickname: str) -> list[dict]:
 
     return quantplay_client.get_holdings(nickname)
 
+# Add a tool to get orders by nickname
+@mcp.tool()
+def get_orders(nickname: str) -> list[dict]:
+    """Get orders for a given nickname
+
+    Args:
+        nickname: The nickname to search orders for
+
+    Returns:
+        A list of order dictionaries
+    """
+    return quantplay_client.get_orders(nickname)
+
 @mcp.tool()
 def place_order(
     nickname: str,
