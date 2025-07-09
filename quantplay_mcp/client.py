@@ -19,6 +19,7 @@ from quantplay_mcp.config import (
     ACCOUNTS_ENDPOINT,
     POSITIONS_ENDPOINT,
     HOLDINGS_ENDPOINT,
+    ORDERS_ENDPOINT,
     ERROR_INVALID_API_KEY,
     ERROR_API_REQUEST_FAILED,
     ERROR_NETWORK_ERROR,
@@ -372,6 +373,50 @@ class QuantPlayClient:
 
             positions_response = self._handle_response(response)
             return positions_response
+
+        except requests.exceptions.Timeout as e:
+            logger.error(f"Request timed out: {e}")
+            raise TimeoutError(ERROR_TIMEOUT.format(timeout=self.timeout)) from e
+
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"Network error: {e}")
+            raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
+
+        except (requests.exceptions.RequestException, QuantPlayAPIError) as e:
+            if not isinstance(e, QuantPlayAPIError):
+                logger.error(f"Request failed: {e}")
+                raise NetworkError(ERROR_NETWORK_ERROR.format(error=str(e))) from e
+            raise
+
+    def get_orders(self, nickname) -> List[dict]:
+        """
+        Get all orders for a given nickname from the API.
+
+        Args:
+            nickname: The nickname to search orders for
+
+        Returns:
+            List of order dictionaries
+
+        Raises:
+            APIRequestError: If the API returns an error
+            NetworkError: If a network error occurs
+            TimeoutError: If the request times out
+            ParseError: If response parsing fails
+        """
+        url = self._build_url(ORDERS_ENDPOINT.format(nickname))
+        print(url)
+
+        try:
+
+            response = requests.get(
+                url,
+                headers=self.headers,
+                timeout=self.timeout,
+            )
+
+            orders_response = self._handle_response(response)
+            return orders_response
 
         except requests.exceptions.Timeout as e:
             logger.error(f"Request timed out: {e}")

@@ -20,6 +20,7 @@ DEFAULT_HEADERS: Dict[str, str] = {
 ACCOUNTS_ENDPOINT: str = "/accounts"
 POSITIONS_ENDPOINT: str = "/accounts/{}/positions"
 HOLDINGS_ENDPOINT: str = "/accounts/{}/holdings"
+ORDERS_ENDPOINT: str = "/accounts/{}/orders"
 PLACE_ORDER_ENDPOINT: str = "/execution/order/place?nickname={}"
 
 # Error messages
